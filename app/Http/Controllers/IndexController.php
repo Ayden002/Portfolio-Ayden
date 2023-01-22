@@ -20,7 +20,8 @@ class IndexController extends Controller
     public function homepage(Request $request)
     {
        $response = Http::get('https://api.publicapis.org/entries')->json();
-        return view('index')->with(['product'=>$response]);
+
+        return view('home')->with(['product'=>$response]);
     }
     public function login(Request $request)
     {
@@ -37,11 +38,11 @@ class IndexController extends Controller
 
         }else{
             return "<script>alert('name or password error');
-                setTimeout(function(){window.history.back();},5)</script>"; 
+                setTimeout(function(){window.history.back();},5)</script>";
         }
 
     }
-    
+
     public function logout(Request $request)
     {
         Auth::logout();
@@ -55,16 +56,19 @@ class IndexController extends Controller
 
     public function registration()
     {
-        return view('registration'); // 注册
+        return view('registration');
+//        return view('register');
     }
 
     public function register(Request $request)
     {
         $request->validate([
-            'name'         => 'required',
-            'email'        => 'required',
+
             'phone_number' => 'required',
-            'password'     => 'required',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|min:6|confirmed',
+            'password_confirmation'     => 'required',
         ]);
 
         $contact = User::create([
@@ -102,7 +106,7 @@ class IndexController extends Controller
         if($request->user()->balance < $total){
 
            return "<script>alert('账户余额不足，无法租赁');
-                setTimeout(function(){window.history.back();},5)</script>";   
+                setTimeout(function(){window.history.back();},5)</script>";
         }
 
         Rental::create([
@@ -120,7 +124,7 @@ class IndexController extends Controller
         User::where('id',$request->user()->id)->update(['balance'=>$balance]);
 
         Computer::where('computer_id',$request->computer_id)->decrement('quantity');
-        return redirect('rentalall'); 
+        return redirect('rentalall');
     }
 
 }

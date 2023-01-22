@@ -13,7 +13,7 @@ class Users extends Migration
      */
     public function up()
     {
-        Schema::create('rental', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email');
@@ -24,8 +24,6 @@ class Users extends Migration
             $table->string('is_student');
             $table->string('is_blacklist');
             $table->string('remember_token');
-            $table->string('is_student');
-            $table->string('is_student');
         });
     }
 
@@ -36,6 +34,6 @@ class Users extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Users');
+
     }
 }
